@@ -13,6 +13,8 @@ let carX = initCarX;
 const dx = 10;
 let rightPressed = false;
 let leftPressed = false;
+let gameOver = false;
+
 
 var img = new Image();
 img.src = 'car.png';
@@ -36,14 +38,16 @@ function keyDownHandler(e) {
 }
 
 function draw(timestamp) {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+  if (gameOver) return;
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
   drawObstacles();
-	if (timestamp - lastTimeObstacleCreated > minPauseBetweenObstacles) {
-		generateObstacle();
-    lastTimeObstacleCreated = timestamp;
-	}
   drawCar();
+  detectCollision();
+
+	if (timestamp - lastTimeObstacleCreated > minPauseBetweenObstacles) {
+    generateObstacle();
+    lastTimeObstacleCreated = timestamp;
+  }
 
   requestAnimationFrame(draw);
 }
@@ -114,6 +118,18 @@ function keyUpHandler(e) {
         leftPressed = false;
     }
 }
+
+function detectCollision() {
+  obstacles.forEach(o => {
+    if ((o.x < carX && o.x + o.width > carX && o.y < carY + carHeight && o.y + o.height > carY)
+			|| (o.x < carX + carWidth && o.x + o.width > carX && o.y < carY + carHeight && o.y + o.height > carY))  {
+    	endGame();
+    }
+  })
+}
+function endGame() {
+	gameOver = true;
+ }
 
 draw();
 
