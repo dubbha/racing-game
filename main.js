@@ -1,5 +1,6 @@
 let lastTimeObstacleCreated = performance.now()
-let minPauseBetweenObstacles = 2000
+let minPauseBetweenObstacles = 1500
+let obstaclesCounter = 0;
 const obstacles = []
 var canvas = document.getElementById('play-field')
 var ctx = canvas.getContext('2d')
@@ -45,12 +46,20 @@ function draw (timestamp) {
   ctx.clearRect(0, 0, canvas.width, canvas.height)
   drawObstacles()
   drawCar()
-  detectCollision()
+  drawScore()
+  detectCollision();
 
   if (timestamp - lastTimeObstacleCreated > minPauseBetweenObstacles) {
     generateObstacle()
     lastTimeObstacleCreated = timestamp
   }
+
+  if ( obstacles.length && obstacles[0].y > carY + carHeight) {
+    obstacles.shift();
+    obstaclesCounter++;
+    accelerateGame();
+  }
+
 
   requestAnimationFrame(draw)
 }
@@ -98,9 +107,6 @@ function generateObstacle () {
     height: brickHeight,
   }
   obstacles.push(obstacle)
-  if (obstacles.length > 3) {
-    obstacles.shift()
-  }
 }
 
 function drawObstacles () {
@@ -128,11 +134,25 @@ function detectCollision () {
 }
 
 function endGame () {
-  gameOver = true
+  gameOver = true;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.font = "100px Arial";
+    ctx.font = "50px Arial";
     ctx.fillStyle = "#ff0000";
-    ctx.fillText("Game Over", canvas.width/2 - 250, canvas.height/2);
+    ctx.fillText(`Game Over. Your score ${obstaclesCounter}`, canvas.width/2 - 250, canvas.height/2);
+    obstaclesCounter = 0;
+
+}
+
+function accelerateGame() {
+  if (obstaclesCounter % 10 === 0 ) {
+    minPauseBetweenObstacles *= 0.9;
+  }
+}
+
+function drawScore() {
+  ctx.font = "16px Arial";
+  ctx.fillStyle = "#0095DD";
+  ctx.fillText("Score: "+ obstaclesCounter, 8, 20);
 }
 
 draw()
