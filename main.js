@@ -19,6 +19,9 @@ let gameOver = false;
 var img = new Image();
 img.src = 'car.png';
 
+var barrierFirst = new Image();
+barrierFirst.src = 'iconfinder_VLC_46933.png';
+
 img.onload = function() {
 	ctx.drawImage(img, carX, carY, carWidth, carHeight);
 }
@@ -57,12 +60,10 @@ function drawCar () {
 			carX += dx;
 		}
 	}
-	
 	if (leftPressed) {
 		if (carX > dx) {
 			carX -= dx;
 		}
-	
 	}
   ctx.drawImage(img, carX, carY, carWidth, carHeight);
 }
@@ -102,12 +103,10 @@ function generateObstacle() {
 }
 
 function drawObstacles() {
-
 	obstacles.forEach(drawSquare);
 }
 
 generateObstacle();
-
 
 
 function keyUpHandler(e) {
