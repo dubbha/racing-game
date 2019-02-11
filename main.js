@@ -28,7 +28,7 @@ var barrierFirst = new Image();
 barrierFirst.src = 'iconfinder_VLC_46933.png';
 
 img.onload = function() {
-	ctx.drawImage(img, carX, carY, carWidth, carHeight);
+  ctx.drawImage(img, carX, carY, carWidth, carHeight);
 }
 
 
@@ -52,7 +52,7 @@ function toggleGameState () {
     }
     else {
       ctx.font = "100px Arial";
-      ctx.fillStyle = "#c7c7c7";
+      ctx.fillStyle = "#4caf50";
       ctx.fillText("Paused", canvas.width/2 - 170, canvas.height/2);
       startButton.innerHTML = 'Start';
     }
@@ -74,10 +74,10 @@ function draw (timestamp) {
   drawCar()
   detectCollision()
 
-	if (timestamp - lastTimeObstacleCreated > minPauseBetweenObstacles) {
-		generateObstacle();
+  if (timestamp - lastTimeObstacleCreated > minPauseBetweenObstacles) {
+    generateObstacle();
     lastTimeObstacleCreated = timestamp;
-	}
+  }
   requestAnimationFrame(draw);
 }
 
@@ -105,7 +105,7 @@ function drawSquare (o) {
   const {x, y, width, height} = o
   ctx.beginPath()
   ctx.rect(x, y, width, height)
-  ctx.fillStyle = '#0095DD'
+  ctx.fillStyle = '#bc3c21'
   ctx.fill()
   ctx.closePath()
   o.y += increment
@@ -167,5 +167,3 @@ function endGame () {
 }
 
 // draw();
-
-

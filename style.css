@@ -2,6 +2,8 @@ canvas {
 	border-right: 10px solid #000;
 	border-left: 10px solid #000;
 	margin: 0 auto;
+	background: url(55356.svg);
+	background-position: center;
 }
 
 .wrapper {
@@ -22,5 +24,9 @@ canvas {
 	border: 1px solid grey;
 	border-radius: 15px;
 	padding: 6px 13px;
+	outline: none;
 }
+
+.start:active,
+.start:focus {outline: none;}
 
