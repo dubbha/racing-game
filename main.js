@@ -15,18 +15,22 @@ function draw() {
   requestAnimationFrame(draw);
 }
 
-let brickX = 370;
-let brickY = 570;
+let brickX = 0;
+let brickY = 0;
 let brickWidth  = 50;
 let brickHeight = 50;
 let increment = 3;
 
 function drawSquare() {
   ctx.beginPath();
-  ctx.drawImage(img, brickX, brickY);
+  ctx.rect(brickX, brickY, brickWidth, brickHeight);
+  ctx.fillStyle = "#0095DD";
+  ctx.fill();
   ctx.closePath();
-  brickY -= increment;
+  brickY += increment;
 }
+
+ctx.drawImage(img, 370, 590);
 
 draw();
 
