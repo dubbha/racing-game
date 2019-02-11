@@ -1,5 +1,6 @@
 let lastTimeObstacleCreated = performance.now();
 let minPauseBetweenObstacles = 2000;
+const obstacles = [];
 var canvas = document.getElementById('play-field');
 var ctx = canvas.getContext('2d');
 
@@ -17,7 +18,7 @@ img.onload = function() {
 function draw(timestamp) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   //drawCar();
-  drawSquare();
+  drawObstacles();
 	if (timestamp - lastTimeObstacleCreated > minPauseBetweenObstacles) {
 		generateObstacle();
     lastTimeObstacleCreated = timestamp;
@@ -31,13 +32,14 @@ let brickWidth;
 const brickHeight = 50;
 const increment = 3;
 
-function drawSquare() {
+function drawSquare(o) {
+	const { x, y, width, height} = o;
 	ctx.beginPath();
-  ctx.rect(brickX, brickY, brickWidth, brickHeight);
+  ctx.rect(x, y, width, height);
   ctx.fillStyle = "#0095DD";
   ctx.fill();
   ctx.closePath();
-  brickY += increment;
+  o.y += increment;
 
 }
 
@@ -46,7 +48,23 @@ function generateObstacle() {
   const maxWidth = canvas.width * 0.3;
 	brickWidth =  minWidth + (maxWidth - minWidth) * Math.random();
   brickX = (canvas.width - brickWidth) * Math.random();
+  const obstacle = {
+  	x: brickX,
+		y: brickY,
+		width: brickWidth,
+		height: brickHeight,
+	}
+  obstacles.push(obstacle);
+  if (obstacles.length > 3) {
+  	obstacles.shift();
+	}
 }
+
+function drawObstacles() {
+
+	obstacles.forEach(drawSquare);
+}
+
 generateObstacle();
 
 draw();
