@@ -1,4 +1,6 @@
-
+let lastTimeObstacleCreated = performance.now();
+let minPauseBetweenObstacles = 2000;
+const obstacles = [];
 var canvas = document.getElementById('play-field');
 var ctx = canvas.getContext('2d');
 const carWidth = 80;
@@ -27,6 +29,7 @@ document.addEventListener('keyup', keyUpHandler, false);
 // startButton.addEventListener('click', start);
 
 function keyDownHandler(e) {
+	// console.log(e)
     if(e.key == "Right" || e.key == "ArrowRight") {
         rightPressed = true;
     }
@@ -35,11 +38,16 @@ function keyDownHandler(e) {
     }
 }
 
-function draw() {
+function draw(timestamp) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  drawSquare();
+
+  drawObstacles();
+	if (timestamp - lastTimeObstacleCreated > minPauseBetweenObstacles) {
+		generateObstacle();
+    lastTimeObstacleCreated = timestamp;
+	}
   drawCar();
-  ctx.drawImage(img, carX, carY, carWidth, carHeight);
+
   requestAnimationFrame(draw);
 }
 function drawCar () {
@@ -53,22 +61,49 @@ function drawCar () {
 			carX -= dx;
 		}
 	}
+  ctx.drawImage(img, carX, carY, carWidth, carHeight);
 }
 
-let brickX = 0;
+let brickX;
 let brickY = 0;
-let brickWidth  = 50;
-let brickHeight = 50;
-let increment = 3;
+let brickWidth;
+const brickHeight = 50;
+const increment = 3;
 
-function drawSquare() {
+function drawSquare(o) {
+	const { x, y, width, height} = o;
 	ctx.beginPath();
-	ctx.rect(brickX, brickY, brickWidth, brickHeight);
-	ctx.fillStyle = "#0095DD";
-	ctx.fill();
-	ctx.closePath();
-	brickY += increment;
+  ctx.rect(x, y, width, height);
+  ctx.fillStyle = "#0095DD";
+  ctx.fill();
+  ctx.closePath();
+  o.y += increment;
+
 }
+
+function generateObstacle() {
+	const minWidth = canvas.width * 0.1;
+  const maxWidth = canvas.width * 0.3;
+	brickWidth =  minWidth + (maxWidth - minWidth) * Math.random();
+  brickX = (canvas.width - brickWidth) * Math.random();
+  const obstacle = {
+  	x: brickX,
+		y: brickY,
+		width: brickWidth,
+		height: brickHeight,
+	}
+  obstacles.push(obstacle);
+  if (obstacles.length > 3) {
+  	obstacles.shift();
+	}
+}
+
+function drawObstacles() {
+	obstacles.forEach(drawSquare);
+}
+
+generateObstacle();
+
 
 function keyUpHandler(e) {
     if(e.key == "Right" || e.key == "ArrowRight") {
