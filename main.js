@@ -23,10 +23,10 @@ document.addEventListener('keydown', keyDownHandler, false);
 document.addEventListener('keyup', keyUpHandler, false);
 
 var img = new Image();
-img.src = 'new-car.png';
+img.src = 'car.png';
 
-var barrierFirst = new Image();
-barrierFirst.src = 'iconfinder_VLC_46933.png';
+// var barrierFirst = new Image();
+// barrierFirst.src = 'iconfinder_VLC_46933.png';
 
 img.onload = function() {
   ctx.drawImage(img, carX, carY, carWidth, carHeight);
@@ -106,11 +106,11 @@ function drawCar () {
   ctx.drawImage(img, carX, carY, carWidth, carHeight)
 }
 
-let brickX
-let brickY = 0
-let brickWidth
-const brickHeight = 50
-const increment = 3
+const brickHeight = 50;
+let brickX;
+let brickWidth;
+const brickY = -brickHeight;
+let increment = 3;
 
 function drawSquare (o) {
   const {x, y, width, height} = o
@@ -178,6 +178,7 @@ function endGame () {
 function accelerateGame() {
   if (obstaclesCounter % 10 === 0 ) {
     minPauseBetweenObstacles *= 0.9;
+    increment *= 1.2;
   }
 }
 
