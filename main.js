@@ -2,7 +2,10 @@ let lastTimeObstacleCreated = performance.now();
 let minPauseBetweenObstacles = 2000;
 const obstacles = [];
 var canvas = document.getElementById('play-field');
+const startButton = document.getElementById('start');
+startButton.addEventListener('click', toggleGameState);
 var ctx = canvas.getContext('2d');
+let play = false;
 const carWidth = 80;
 const carHeight = 80;
 canvas.width = 800;
@@ -26,10 +29,25 @@ img.onload = function() {
 
 document.addEventListener('keydown', keyDownHandler, false);
 document.addEventListener('keyup', keyUpHandler, false);
-// startButton.addEventListener('click', start);
+
+function startGameHandler (e) {
+  if (e.keyCode === 13) {
+    toggleGameState();
+  }
+}
+
+function toggleGameState () {
+  play = !play;
+  if (play) {
+    draw();
+  }
+  else {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(img, carX, carY, carWidth, carHeight);
+  }
+}
 
 function keyDownHandler(e) {
-	// console.log(e)
     if(e.key == "Right" || e.key == "ArrowRight") {
         rightPressed = true;
     }
@@ -47,8 +65,7 @@ function draw(timestamp) {
     lastTimeObstacleCreated = timestamp;
 	}
   drawCar();
-
-  requestAnimationFrame(draw);
+  if (play) requestAnimationFrame(draw);
 }
 function drawCar () {
 	if (rightPressed) {
@@ -114,5 +131,5 @@ function keyUpHandler(e) {
     }
 }
 
-draw();
+// draw();
 
