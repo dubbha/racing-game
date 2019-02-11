@@ -4,8 +4,8 @@ let obstacles = [];
 var canvas = document.getElementById('play-field');
 const startButton = document.getElementById('start');
 var ctx = canvas.getContext('2d');
-const carWidth = 80;
-const carHeight = 80;
+const carWidth = 60;
+const carHeight = 90;
 canvas.width = 800;
 canvas.height = 650;
 const initCarX = canvas.width / 2 - carWidth/2;
@@ -22,7 +22,7 @@ document.addEventListener('keydown', keyDownHandler, false);
 document.addEventListener('keyup', keyUpHandler, false);
 
 var img = new Image();
-img.src = 'car.png';
+img.src = 'new-car.png';
 
 var barrierFirst = new Image();
 barrierFirst.src = 'iconfinder_VLC_46933.png';
