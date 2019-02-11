@@ -1,48 +1,75 @@
-let lastTimeObstacleCreated = performance.now()
+let lastTimeObstacleCreated = performance.now();
 let minPauseBetweenObstacles = 1500
 let obstaclesCounter = 0;
-const obstacles = []
-var canvas = document.getElementById('play-field')
-var ctx = canvas.getContext('2d')
-const carWidth = 80
-const carHeight = 80
-canvas.width = 800
-canvas.height = 650
-const initCarX = canvas.width / 2 - carWidth / 2
-const carY = canvas.height - carHeight
-let carX = initCarX
-const dx = 10
-let rightPressed = false
-let leftPressed = false
-let gameOver = false
+let obstacles = [];
+var canvas = document.getElementById('play-field');
+const startButton = document.getElementById('start');
+var ctx = canvas.getContext('2d');
+const carWidth = 60;
+const carHeight = 90;
+canvas.width = 800;
+canvas.height = 650;
+const initCarX = canvas.width / 2 - carWidth/2;
+const carY = canvas.height - carHeight;
+let carX = initCarX;
+const dx = 10;
+let rightPressed = false;
+let leftPressed = false;
+let gameOver = false;
+let play = false;
 
-var img = new Image()
-img.src = 'car.png'
+startButton.addEventListener('click', toggleGameState);
+document.addEventListener('keydown', keyDownHandler, false);
+document.addEventListener('keyup', keyUpHandler, false);
 
-var barrierFirst = new Image()
-barrierFirst.src = 'iconfinder_VLC_46933.png'
+var img = new Image();
+img.src = 'new-car.png';
 
-img.onload = function () {
-  ctx.drawImage(img, carX, carY, carWidth, carHeight)
+var barrierFirst = new Image();
+barrierFirst.src = 'iconfinder_VLC_46933.png';
+
+img.onload = function() {
+  ctx.drawImage(img, carX, carY, carWidth, carHeight);
 }
 
-document.addEventListener('keydown', keyDownHandler, false)
-document.addEventListener('keyup', keyUpHandler, false)
 
-// startButton.addEventListener('click', start);
+function startGameHandler (e) {
+  if (e.keyCode === 13) {
+    toggleGameState();
+  }
+}
 
-function keyDownHandler (e) {
-  // console.log(e)
-  if (e.key == 'Right' || e.key == 'ArrowRight') {
-    rightPressed = true
-  }
-  else if (e.key == 'Left' || e.key == 'ArrowLeft') {
-    leftPressed = true
-  }
+function toggleGameState () {
+    play = !play;
+    if (gameOver) {
+      gameOver = false;
+      draw();
+      return;
+    }
+    if (play) {
+      lastTimeObstacleCreated = performance.now();
+      draw();
+      startButton.innerHTML = 'Pause';
+    }
+    else {
+      ctx.font = "100px Arial";
+      ctx.fillStyle = "#4caf50";
+      ctx.fillText("Paused", canvas.width/2 - 170, canvas.height/2);
+      startButton.innerHTML = 'Start';
+    }
+}
+
+function keyDownHandler(e) {
+    if(e.key == "Right" || e.key == "ArrowRight") {
+        rightPressed = true;
+    }
+    else if(e.key == "Left" || e.key == "ArrowLeft") {
+        leftPressed = true;
+    }
 }
 
 function draw (timestamp) {
-  if (gameOver) return
+  if (gameOver || !play) return
   ctx.clearRect(0, 0, canvas.width, canvas.height)
   drawObstacles()
   drawCar()
@@ -50,8 +77,8 @@ function draw (timestamp) {
   detectCollision();
 
   if (timestamp - lastTimeObstacleCreated > minPauseBetweenObstacles) {
-    generateObstacle()
-    lastTimeObstacleCreated = timestamp
+    generateObstacle();
+    lastTimeObstacleCreated = timestamp;
   }
 
   if ( obstacles.length && obstacles[0].y > carY + carHeight) {
@@ -62,6 +89,7 @@ function draw (timestamp) {
 
 
   requestAnimationFrame(draw)
+
 }
 
 function drawCar () {
@@ -88,7 +116,7 @@ function drawSquare (o) {
   const {x, y, width, height} = o
   ctx.beginPath()
   ctx.rect(x, y, width, height)
-  ctx.fillStyle = '#0095DD'
+  ctx.fillStyle = '#bc3c21'
   ctx.fill()
   ctx.closePath()
   o.y += increment
@@ -140,6 +168,10 @@ function endGame () {
     ctx.fillStyle = "#ff0000";
     ctx.fillText(`Game Over. Your score ${obstaclesCounter}`, canvas.width/2 - 250, canvas.height/2);
     obstaclesCounter = 0;
+  startButton.innerHTML = 'Start';
+  play = false;
+  carX = initCarX;
+  obstacles = [];
 
 }
 
@@ -150,10 +182,9 @@ function accelerateGame() {
 }
 
 function drawScore() {
-  ctx.font = "16px Arial";
-  ctx.fillStyle = "#0095DD";
+  ctx.font = "26px Arial";
+  ctx.fillStyle = "#bc3c21";
   ctx.fillText("Score: "+ obstaclesCounter, 8, 20);
 }
 
-draw()
-
+// draw();
