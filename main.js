@@ -1,6 +1,6 @@
 let lastTimeObstacleCreated = performance.now();
 let minPauseBetweenObstacles = 2000;
-const obstacles = [];
+let obstacles = [];
 var canvas = document.getElementById('play-field');
 const startButton = document.getElementById('start');
 var ctx = canvas.getContext('2d');
@@ -39,21 +39,23 @@ function startGameHandler (e) {
 }
 
 function toggleGameState () {
-  play = !play;
-  if (play) {
-    lastTimeObstacleCreated = performance.now();
-    draw();
-    startButton.innerHTML = 'Pause';
-  }
-  else {
-    // ctx.clearRect(0, 0, canvas.width, canvas.height);
-    // ctx.drawImage(img, carX, carY, carWidth, carHeight);
-    // ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.font = "100px Arial";
-    ctx.fillStyle = "#c7c7c7";
-    ctx.fillText("Paused", canvas.width/2 - 170, canvas.height/2);
-    startButton.innerHTML = 'Start';
-  }
+    play = !play;
+    if (gameOver) {
+      gameOver = false;
+      draw();
+      return;
+    }
+    if (play) {
+      lastTimeObstacleCreated = performance.now();
+      draw();
+      startButton.innerHTML = 'Pause';
+    }
+    else {
+      ctx.font = "100px Arial";
+      ctx.fillStyle = "#c7c7c7";
+      ctx.fillText("Paused", canvas.width/2 - 170, canvas.height/2);
+      startButton.innerHTML = 'Start';
+    }
 }
 
 function keyDownHandler(e) {
@@ -157,6 +159,11 @@ function endGame () {
   ctx.font = "100px Arial";
   ctx.fillStyle = "#ff0000";
   ctx.fillText("Game Over", canvas.width/2 - 250, canvas.height/2);
+  
+  startButton.innerHTML = 'Start';
+  play = false;
+  carX = initCarX;
+  obstacles = [];
 }
 
 // draw();
