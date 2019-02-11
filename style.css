@@ -1,0 +1,20 @@
+canvas {
+	border-right: 10px solid #000;
+	border-left: 10px solid #000;
+	margin: 0 auto;
+}
+
+.wrapper {
+	display: flex;
+	justify-content: center;
+	position: relative;
+}
+
+.start {
+	font-size: 40px;
+	color: green;
+	font-weight: bold;
+	position: absolute;
+	bottom: 0;
+	left: 240px;
+}
